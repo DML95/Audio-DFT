@@ -3,18 +3,17 @@
 #include "alsa_read_class.h"
 #include "utils_class.h"
 
-//eliminar
 
 template <class T> void AudioClass<T>::mainThread(AudioClass<T> *audioClass){
     std::clog<<"[AudioClass] Thread init"<<std::endl;
-    const long long elements=audioClass->bufferClass->getElements();
-    const long long mediaElements=elements<<1;
+    const unsigned long long elements=audioClass->bufferClass->getElements();
+    const unsigned long long mediaElements=elements<<1;
     T *buffer;
     std::vector<float> audio(mediaElements);
     DFTClass dftClass;
     UtilsClass utilsClass;
     float max=0;
-    CONFIG_ALSA configAlsa={
+    AlsaReadClass::config_alsa configAlsa={
         SND_PCM_FORMAT_FLOAT,
         10000,
         1,
@@ -26,7 +25,7 @@ template <class T> void AudioClass<T>::mainThread(AudioClass<T> *audioClass){
     UtilsClass::setRealtimeThread();
 
     while(audioClass->run){
-        buffer=audioClass->bufferClass->getBuffer();
+        buffer=audioClass->bufferClass->waitAndGetBuffer();
         if(buffer){
             alsaReadClass.wait();
             while(!dftClass.dftAndAbs(buffer,audio)){

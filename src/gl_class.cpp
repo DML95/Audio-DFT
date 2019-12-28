@@ -5,13 +5,9 @@
 #include "gl_class.h"
 
 const int GLClass::glAttribs[]={
-    GLX_RENDER_TYPE,GLX_RGBA_BIT,
-    GLX_DRAWABLE_TYPE,GLX_WINDOW_BIT,
+    GLX_RGBA,
     GLX_DOUBLEBUFFER,GL_TRUE,
-    GLX_RED_SIZE,1,
-    GLX_GREEN_SIZE,1,
-    GLX_BLUE_SIZE,1,
-    GLX_ALPHA_SIZE,1,
+    GLX_DEPTH_SIZE,24,
     GLX_SAMPLE_BUFFERS,GL_TRUE,// <-- MSAA
     GLX_SAMPLES,4,// <-- MSAA
     None
@@ -35,7 +31,7 @@ GLClass::GLClass(const std::shared_ptr<DisplayClass> &displayClass,
 
 GLClass::~GLClass(){
     std::clog<<"[GLClass] Unloadding"<<std::endl;
-    glXMakeCurrent(displayClass->get(),NULL,NULL);
+    glXMakeCurrent(displayClass->get(),0,0);
     glXDestroyContext(displayClass->get(),this->gl);
 }
 

@@ -66,8 +66,7 @@ void DFTClass::standardDftAndAbs(DFTClass *dftClass,float *out,const std::vector
 #endif
 
 bool DFTClass::dftAndAbs(float *out,const std::vector<float> &real){
-    const int size=real.capacity();
-    const int mediaSize=size>>1;
+    const unsigned int size=real.capacity();
     bool run=(bool)this->angle;
     if(run){
         run=size==this->angle->capacity();

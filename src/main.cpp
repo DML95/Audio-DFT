@@ -4,136 +4,114 @@
 #include <memory>
 #include <exception>
 
-//eliminar
-#include <chrono>
-#include <thread>
-#include <random>
-//eliminar
-
 #define GL_GLEXT_PROTOTYPES
 #define GL_EXT_PROTOTYPES
 
+
 #include "main.h"
-#include "config_log_class.h"
-#include "window_class.h"
-#include "gl_class.h"
-#include "event_class.h"
-#include "VBO_class.h"
-#include "buffer_class.h"
-#include "dft_class.h"
-#include "audio_class.h"
-#include "shader_class.h"
-#include "program_class.h"
-#include "shader_code_class.h"
 
-#define TYPE_BUFFER float
-#define SIZE 512
+std::shared_ptr<Main> Main::main;
 
-static std::shared_ptr<DisplayClass> displayClassWindows;
-static std::shared_ptr<DisplayClass> displayClassGL;
-static std::shared_ptr<WindowClass> windowClass;
-static std::shared_ptr<GLClass> glClass;
-static std::shared_ptr<EventClass> eventClass;
-static std::shared_ptr<BufferClass<TYPE_BUFFER> > bufferClass;
-static std::shared_ptr<AudioClass<TYPE_BUFFER> > audioClass;
-static std::shared_ptr<VBOClass<float> > vboClassIndex;
-//Shader
-static std::shared_ptr<ShaderClass> vertexShaderClass;
-static std::shared_ptr<ShaderClass> fragmentShaderClass;
-//program
-static std::shared_ptr<ProgramClass> programClass;
-//atributos program
-static GLint vertexAttribute;
-static GLint indexAttribute;
+Main::Main(){
+    std::clog<<"[Main] load"<<std::endl;
+    ConfigLog configLog;
+    this->displayClassWindows=std::make_shared<DisplayClass>();
+    this->displayClassGL=std::make_shared<DisplayClass>();
+    this->windowClass=std::make_shared<WindowClass>(displayClassWindows,0,0,600,400,0x0,true);
+    this->windowClass->setTitle("Audio DFT");
+    this->eventClass=std::make_shared<EventClass>(windowClass);
+    this->glClass=std::make_shared<GLClass>(displayClassGL,windowClass,true);
+    this->bufferClass=std::make_shared<BufferClass<TYPE_BUFFER> >(glClass,Main::size);
+    this->audioClass=std::make_shared<AudioClass<TYPE_BUFFER> >(eventClass,bufferClass);
+    glLoad();
+}
 
+void Main::loadIndex(){
+    this->vboClassIndex=std::make_shared<VBOClass<float> >(this->glClass,Main::size,GL_STATIC_DRAW);
+    float *indexPtr=this->vboClassIndex->map(GL_WRITE_ONLY);
+    for(int cont=0;cont<Main::size;++cont){
+        indexPtr[cont]=(cont*2./(Main::size-1.))-1.;
+    }
+    this->vboClassIndex->unMap();
+}
 
-static void glLoop(){
-    std::clog<<"[Main.cpp] mainLoop init"<<std::endl;
-    EVENTS events;
+void Main::glLoad(){
+    std::vector<std::shared_ptr<ShaderClass> > shaderList;
+    glEnable(GL_MULTISAMPLE);
+    this->loadIndex();
+    this->vertexShaderClass=std::make_shared<ShaderClass>(glClass,GL_VERTEX_SHADER,ShaderCodeClass::VERTEX_SHADER);
+    shaderList.push_back(vertexShaderClass);
+    this->fragmentShaderClass=std::make_shared<ShaderClass>(glClass,GL_FRAGMENT_SHADER,ShaderCodeClass::FRAGMENT_SHADER);
+    shaderList.push_back(fragmentShaderClass);
+    this->programClass=std::make_shared<ProgramClass>(glClass,shaderList);
+    this->vertexAttribute=programClass->getAttribLocation("vertex");
+    this->indexAttribute=programClass->getAttribLocation("index");
+}
+
+std::shared_ptr<Main>& Main::getHinstance(){
+    if(!Main::main){
+        Main::main.reset(new Main());
+    }
+    return Main::main;
+}
+
+void Main::run(){
+    std::clog<<"[Main] mainLoop init"<<std::endl;
+    EventClass::eventsStruct events;
     VBOClass<TYPE_BUFFER> *vboClass=NULL;
     UtilsClass::setRealtimeThread();
-    while(eventClass->next(events)){
+    while(this->eventClass->next(events)){
         bool draw=false;
-        if(events.events&EventClass::MAX){
-            programClass->use();
-                programClass->setUniformVar("maxValue",events.max);
-            programClass->notUse();
+        if(events.events&EventClass::eventMack::max){
+            //se establece el valor maximo del eje y
+            this->programClass->use();
+                this->programClass->setUniformVar("maxValue",events.maxValue);
+            this->programClass->notUse();
             draw=true;
         }
-        if(events.events&EventClass::RESIZE){
+        if(events.events&EventClass::eventMack::resize){
+            //se redimensiona la escena
             glViewport(0,0,events.width,events.height);
             draw=true;
         }
-        if(events.events&EventClass::SWAP){
+        if(events.events&EventClass::eventMack::swap){
+            //se intecamvia el vbo del eje y
             vboClass=bufferClass->swapAndGetVBO();
             draw=true;
         }
         if(draw){
+            //se borra la escena anterior
             glClearColor(0.,0.,0.,0.);
             glClear(GL_COLOR_BUFFER_BIT);
             if(vboClass){
-                /*glBegin(GL_TRIANGLES);
-                    glColor3f(1.,0.,0.);glVertex2f(1.,1.);
-                    glColor3f(0.,1.,0.);glVertex2f(-1.,1.);
-                    glColor3f(0.,0.,1.);glVertex2f(0.,-1.);
-                glEnd();*/
-                programClass->use();
+                //se carga el programa
+                this->programClass->use();
+                    //se carga el vbo con el eje y
                     vboClass->bind(GL_ARRAY_BUFFER);
-                        //glVertexPointer(1,GL_FLOAT,0,0);
                         glVertexAttribPointer(vertexAttribute,1,GL_FLOAT,0,0,0);
-                    //glColorPointer(3,GL_FLOAT,sizeof(float)*5,(GLvoid*)(sizeof(float)*2));
-                    vboClassIndex->bind(GL_ARRAY_BUFFER);
-                    //glGetAttribLocation
+                    //se carga el vbo con el eje x
+                    this->vboClassIndex->bind(GL_ARRAY_BUFFER);
                         glVertexAttribPointer(indexAttribute,1,GL_FLOAT,0,0,0);
-                        //glVertexPointer(1,GL_FLOAT,0,0);
-                    vboClassIndex->unBind(GL_ARRAY_BUFFER);
-                    glDrawArrays(GL_LINE_STRIP,0,SIZE);
-                programClass->notUse();
+                    //se descargan todos los vbos
+                    this->vboClassIndex->unBind(GL_ARRAY_BUFFER);
+                    //de dibuja la escena
+                    glDrawArrays(GL_LINE_STRIP,0,Main::size);
+                //se descarga el programa
+                this->programClass->notUse();
             }
+            //se espera a que acabe el dibujado
             glFinish();
         }
-        if(events.events&EventClass::PAINT){
-            glClass->swapBuffers();
+        if(events.events&EventClass::eventMack::paint){
+            //se intercabia el bufer atiguo por el nuevo para dibujarlo en pantalla
+            this->glClass->swapBuffers();
         }
     }
-    std::clog<<"[Main.cpp] mainLoop end"<<std::endl;
-}
-
-static void loadIndex(){
-    vboClassIndex=std::make_shared<VBOClass<float> >(glClass,SIZE,GL_STATIC_DRAW);
-    float *indexPtr=vboClassIndex->map(GL_WRITE_ONLY);
-    for(int cont=0;cont<SIZE;++cont){
-        indexPtr[cont]=(cont*2./(SIZE-1.))-1.;
-    }
-    vboClassIndex->unMap();
-}
-
-static void glLoad(){
-    std::vector<std::shared_ptr<ShaderClass> > shaderList;
-    glEnable(GL_MULTISAMPLE);
-    //glEnableClientState(GL_VERTEX_ARRAY);
-    loadIndex();
-    vertexShaderClass=std::make_shared<ShaderClass>(glClass,GL_VERTEX_SHADER,ShaderCodeClass::VERTEX_SHADER);
-    shaderList.push_back(vertexShaderClass);
-    fragmentShaderClass=std::make_shared<ShaderClass>(glClass,GL_FRAGMENT_SHADER,ShaderCodeClass::FRAGMENT_SHADER);
-    shaderList.push_back(fragmentShaderClass);
-    programClass=std::make_shared<ProgramClass>(glClass,shaderList);
-    vertexAttribute=programClass->getAttribLocation("vertex");
-    indexAttribute=programClass->getAttribLocation("index");
-
+    std::clog<<"[Main] mainLoop end"<<std::endl;
 }
 
 int main(){
-    ConfigLog configLog;
-    displayClassWindows=std::make_shared<DisplayClass>();
-    displayClassGL=std::make_shared<DisplayClass>();
-    windowClass=std::make_shared<WindowClass>(displayClassWindows,0,0,300,200,0x0,true);
-    windowClass->setTitle("Audio DFT");
-    eventClass=std::make_shared<EventClass>(windowClass);
-    glClass=std::make_shared<GLClass>(displayClassGL,windowClass,true);
-    bufferClass=std::make_shared<BufferClass<TYPE_BUFFER> >(glClass,SIZE);
-    audioClass=std::make_shared<AudioClass<TYPE_BUFFER> >(eventClass,bufferClass);
-    glLoad();
-    glLoop();
+    std::shared_ptr<Main> mainHinstance=Main::getHinstance();
+    mainHinstance->run();
     return 0;
 }

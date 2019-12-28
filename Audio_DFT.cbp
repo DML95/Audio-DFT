@@ -93,6 +93,8 @@
 		<Unit filename="src/program_class.h">
 			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
+		<Unit filename="src/semaphore_class.cpp" />
+		<Unit filename="src/semaphore_class.h" />
 		<Unit filename="src/shader_class.cpp" />
 		<Unit filename="src/shader_class.h">
 			<Option target="&lt;{~None~}&gt;" />
@@ -103,8 +105,6 @@
 		</Unit>
 		<Unit filename="src/utils_class.cpp" />
 		<Unit filename="src/utils_class.h" />
-		<Unit filename="src/wait_class.cpp" />
-		<Unit filename="src/wait_class.h" />
 		<Unit filename="src/window_class.cpp" />
 		<Unit filename="src/window_class.h" />
 		<Extensions>

@@ -5,6 +5,8 @@
     #include <vector>
     #include <memory>
 
+    #include "gl_class.h"
+
     //crea un VBO(Memoria de la GPU) de opengl
     template <class T>class VBOClass{
         private:

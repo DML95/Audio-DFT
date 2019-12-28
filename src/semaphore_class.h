@@ -1,17 +1,17 @@
-#ifndef WAITCLASS_H
-#define WAITCLASS_H
+#ifndef SEMAPHORECLASS_H
+#define SEMAPHORECLASS_H
 
     #include <condition_variable>
     #include <mutex>
 
     //clase para detener y reanudar hilos
-    class WaitClass{
+    class SemaphoreClass{
         private:
             std::mutex mutex;
-            std::unique_ptr<std::condition_variable> event;
+            std::condition_variable semaphore;
         public:
             //constructor
-            WaitClass();
+            SemaphoreClass();
             //detiene el hilo
             void wait();
             //activa los hilos detenidos

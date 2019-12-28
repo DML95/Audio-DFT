@@ -8,25 +8,31 @@ void EventClass::mainThread(EventClass *eventClass){
     std::clog<<"[EventClass] Thread init"<<std::endl;
     XEvent event;
     eventClass->load.exchange(false);
-    eventClass->waitClass.notify_all();
+    eventClass->semaphore.notify_all();
     while(eventClass->run){
         eventClass->displayClass->next(event);
         switch(event.type){
             case ClientMessage:
                 if((Atom)event.xclient.data.l[0]==eventClass->wmDeleteWindows){
+                    eventClass->mutex.lock();
                     eventClass->run.exchange(false);
-                    eventClass->waitClass.notify_all();
+                    eventClass->semaphore.notify_all();
+                    eventClass->mutex.unlock();
                 }
                 break;
             case ConfigureNotify:
+                eventClass->mutex.lock();
                 eventClass->width.exchange(event.xconfigure.width);
                 eventClass->height.exchange(event.xconfigure.height);
-                eventClass->events.fetch_or(EventClass::RESIZE);
-                eventClass->waitClass.notify_all();
+                eventClass->events.fetch_or(EventClass::eventMack::resize);
+                eventClass->semaphore.notify_all();
+                eventClass->mutex.unlock();
                 break;
             case Expose:
-                eventClass->events.fetch_or(EventClass::PAINT);
-                eventClass->waitClass.notify_all();
+                eventClass->mutex.lock();
+                eventClass->events.fetch_or(EventClass::eventMack::paint);
+                eventClass->semaphore.notify_all();
+                eventClass->mutex.unlock();
                 break;
         }
     }
@@ -44,7 +50,7 @@ EventClass::EventClass(const std::shared_ptr<WindowClass> &windowClass):
     this->events=0;
     this->load=true;
     this->thread=std::make_unique<std::thread>(EventClass::mainThread,this);
-    while(this->load)this->waitClass.wait();
+    while(this->load)this->semaphore.wait();
 }
 
 EventClass::~EventClass(){
@@ -52,28 +58,36 @@ EventClass::~EventClass(){
     this->thread->join();
 }
 
-bool EventClass::next(EVENTS &eventsStruct){
+bool EventClass::next(EventClass::eventsStruct &eventsStruct){
     bool run;
     do{
+        this->semaphore.wait();
+        this->mutex.lock();
         eventsStruct.events=this->events.exchange(0);
-        if(!eventsStruct.events)this->waitClass.wait();
         run=this->run;
-        if(eventsStruct.events&EventClass::RESIZE){
+        if(eventsStruct.events&EventClass::eventMack::resize){
             eventsStruct.height=this->height;
             eventsStruct.width=this->width;
         }
-        if(eventsStruct.events&EventClass::MAX)eventsStruct.max=this->max;
+        if(eventsStruct.events&EventClass::eventMack::max){
+            eventsStruct.maxValue=this->maxValue;
+        }
+        this->mutex.unlock();
     }while(run&&(!eventsStruct.events));
     return run;
 }
 
-void EventClass::addEvents(unsigned int eventsMask){
+void EventClass::addEvents(EventClass::eventMack eventsMask){
+    this->mutex.lock();
     this->events.fetch_or(eventsMask);
-    this->waitClass.notify_all();
+    this->semaphore.notify_all();
+    this->mutex.unlock();
 }
 
 void EventClass::swapAndPaint(float max){
-    this->max.exchange(max);
-    this->events.fetch_or(EventClass::SWAP|EventClass::PAINT|EventClass::MAX);
-    this->waitClass.notify_all();
+    this->mutex.lock();
+    this->maxValue.exchange(max);
+    this->events.fetch_or(EventClass::eventMack::swap|EventClass::eventMack::paint|EventClass::eventMack::max);
+    this->semaphore.notify_all();
+    this->mutex.unlock();
 }

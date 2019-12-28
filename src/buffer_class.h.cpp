@@ -13,10 +13,13 @@ template <class T> BufferClass<T>::~BufferClass(){
     std::clog<<"[BufferClass] Unloadding"<<std::endl;
     this->buffer=NULL;
     this->swap=false;
-    waitClass.notify_all();
+    semaphore.notify_all();
 }
 
 template <class T> VBOClass<T>* BufferClass<T>::swapAndGetVBO(){
+    while(!this->mutex.try_lock()){
+        this->semaphore.notify_all();
+    }
     bool option=this->option;
     VBOClass<T> *vboClass=this->vboClass[option].get();
     vboClass->unMap();
@@ -24,15 +27,21 @@ template <class T> VBOClass<T>* BufferClass<T>::swapAndGetVBO(){
     this->buffer=this->vboClass[option]->map(GL_READ_WRITE);
     this->option=option;
     this->swap=false;
-    waitClass.notify_all();
+    this->mutex.unlock();
     return vboClass;
 }
 
-template <class T> T* BufferClass<T>::getBuffer(){
-    while(this->swap.exchange(true)){
-        waitClass.wait();
-    }
-    return this->buffer;
+template <class T> T* BufferClass<T>::waitAndGetBuffer(){
+    T *buffer;
+    bool swap;
+    do{
+        this->mutex.lock();
+        buffer=this->buffer;
+        swap=this->swap.exchange(true);
+        if(swap)semaphore.wait();
+        this->mutex.unlock();
+    }while(swap);
+    return buffer;
 }
 
 template <class T> long long BufferClass<T>::getElements(){

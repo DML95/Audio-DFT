@@ -1,7 +1,7 @@
 #include "alsa_read_class.h"
 #include <iostream>
 
-AlsaReadClass::AlsaReadClass(CONFIG_ALSA &configAlsa){
+AlsaReadClass::AlsaReadClass(AlsaReadClass::config_alsa &configAlsa){
     std::clog<<"[AlsaReadClass] Loadding\n\tformat: "<<configAlsa.format<<
             "\n\tnear rate: "<<configAlsa.rateNear<<" Hz"<<
             "\n\tchannels: "<<configAlsa.channels<<

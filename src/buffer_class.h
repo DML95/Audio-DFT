@@ -5,11 +5,14 @@
     #include <mutex>
     #include <atomic>
 
+    #include "gl_class.h"
+
     //gestiona los buffers usados para dijado y escritura
     template <class T> class BufferClass{
         private:
             const std::shared_ptr<GLClass> glClass;
-            WaitClass waitClass;
+            SemaphoreClass semaphore;
+            std::mutex mutex;
             std::atomic_bool option;
             std::atomic_bool swap;
             long long elements;
@@ -22,9 +25,10 @@
             BufferClass(const std::shared_ptr<GLClass> &glClass,long long elements);
             //destructor
             ~BufferClass();
-            //logica
+            //intercambia los VBO
             VBOClass<T>* swapAndGetVBO();
-            T* getBuffer();
+            //espara hasta que se intercambian los bufferes y devuelve el ultimo
+            T* waitAndGetBuffer();
             long long getElements();
     };
 

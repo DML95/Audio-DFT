@@ -503,3 +503,177 @@
 	<X11/Xutil.h>
 	"window_class.h"
 
+1577016344 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/alsa_read_class.cpp
+	"alsa_read_class.h"
+	<iostream>
+
+1577016324 /home/david-linux-ssd/Programacion/Audio-DFT/src/alsa_read_class.h
+	<vector>
+	<alsa/asoundlib.h>
+	"alsa_read_class.h.cpp"
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/alsa_read_class.h.cpp
+	<iostream>
+
+1576939087 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/config_log_class.cpp
+	<iostream>
+	"config_log_class.h"
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/config_log_class.h
+
+1577015971 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/dft_class.cpp
+	<iostream>
+	<cmath>
+	"dft_class.h"
+	<cpuid.h>
+	<xmmintrin.h>
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/dft_class.h
+	<cmath>
+	<memory>
+	<vector>
+
+1576939087 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/display_class.cpp
+	<stdexcept>
+	<iostream>
+	"window_class.h"
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/window_class.h
+	<X11/Xlib.h>
+	<memory>
+	<string>
+	<vector>
+	"display_class.h"
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/display_class.h
+	<X11/Xlib.h>
+	<memory>
+	<string>
+	<vector>
+
+1577547151 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/event_class.cpp
+	<iostream>
+	"window_class.h"
+	"event_class.h"
+
+1577547108 /home/david-linux-ssd/Programacion/Audio-DFT/src/event_class.h
+	<X11/Xlib.h>
+	<atomic>
+	<thread>
+	"semaphore_class.h"
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/wait_class.h
+	<condition_variable>
+	<mutex>
+
+1577537555 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/gl_class.cpp
+	<iostream>
+	"window_class.h"
+	"gl_class.h"
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/gl_class.h
+	<GLES2/gl2.h>
+	<GL/glx.h>
+	<memory>
+
+1577541891 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/main.cpp
+	<X11/Xlib.h>
+	<unistd.h>
+	<iostream>
+	<memory>
+	<exception>
+	"main.h"
+
+1577014921 /home/david-linux-ssd/Programacion/Audio-DFT/src/main.h
+	"config_log_class.h"
+	"window_class.h"
+	"gl_class.h"
+	"event_class.h"
+	"VBO_class.h"
+	"buffer_class.h"
+	"dft_class.h"
+	"audio_class.h"
+	"shader_class.h"
+	"program_class.h"
+	"shader_code_class.h"
+
+1577014077 /home/david-linux-ssd/Programacion/Audio-DFT/src/VBO_class.h
+	<GLES2/gl2.h>
+	<vector>
+	<memory>
+	"gl_class.h"
+	"VBO_class.h.cpp"
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/VBO_class.h.cpp
+
+1577551828 /home/david-linux-ssd/Programacion/Audio-DFT/src/buffer_class.h
+	<memory>
+	<mutex>
+	<atomic>
+	"gl_class.h"
+	"buffer_class.h.cpp"
+
+1577551872 /home/david-linux-ssd/Programacion/Audio-DFT/src/buffer_class.h.cpp
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/audio_class.h
+	"audio_class.h.cpp"
+
+1577551880 /home/david-linux-ssd/Programacion/Audio-DFT/src/audio_class.h.cpp
+	"dft_class.h"
+	"alsa_read_class.h"
+	"utils_class.h"
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/utils_class.h
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/shader_class.h
+	<GLES2/gl2.h>
+	<string>
+	<memory>
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/program_class.h
+	<GLES2/gl2.h>
+	<memory>
+
+1576939087 /home/david-linux-ssd/Programacion/Audio-DFT/src/shader_code_class.h
+	<string>
+
+1577027069 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/program_class.cpp
+	<iostream>
+	"window_class.h"
+	"gl_class.h"
+	"shader_class.h"
+	"program_class.h"
+
+1576939087 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/shader_class.cpp
+	<iostream>
+	"window_class.h"
+	"gl_class.h"
+	"shader_class.h"
+
+1576939087 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/shader_code_class.cpp
+	"shader_code_class.h"
+
+1576939087 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/utils_class.cpp
+	<iostream>
+	"utils_class.h"
+	<cpuid.h>
+	<xmmintrin.h>
+
+1576939087 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/wait_class.cpp
+	<iostream>
+	"wait_class.h"
+
+1576939087 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/window_class.cpp
+	<iostream>
+	<iomanip>
+	<X11/Xutil.h>
+	"window_class.h"
+
+1577548032 /home/david-linux-ssd/Programacion/Audio-DFT/src/semaphore_class.h
+	<condition_variable>
+	<mutex>
+
+1577548072 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/semaphore_class.cpp
+	<iostream>
+	"semaphore_class.h"
+
