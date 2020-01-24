@@ -44,6 +44,8 @@
             void loadIndex();
             //carga los Shader de opengl
             void glLoad();
+            //comprueva si la version de opengl es compatible
+            void checkVersionGL();
         public:
             //devuelve la hisnatccia de la clase
             static std::shared_ptr<Main>& getHinstance();

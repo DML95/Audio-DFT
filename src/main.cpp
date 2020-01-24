@@ -21,6 +21,7 @@ Main::Main(){
     this->windowClass->setTitle("Audio DFT");
     this->eventClass=std::make_shared<EventClass>(windowClass);
     this->glClass=std::make_shared<GLClass>(displayClassGL,windowClass,true);
+    this->checkVersionGL();
     this->bufferClass=std::make_shared<BufferClass<TYPE_BUFFER> >(glClass,Main::size);
     this->audioClass=std::make_shared<AudioClass<TYPE_BUFFER> >(eventClass,bufferClass);
     glLoad();
@@ -46,6 +47,15 @@ void Main::glLoad(){
     this->programClass=std::make_shared<ProgramClass>(glClass,shaderList);
     this->vertexAttribute=programClass->getAttribLocation("vertex");
     this->indexAttribute=programClass->getAttribLocation("index");
+}
+
+void Main::checkVersionGL(){
+    int glMajorVersion;
+    glGetIntegerv(GL_MAJOR_VERSION,&glMajorVersion);
+    std::clog<<"[Main] version OpenGL: "<<glMajorVersion<<std::endl;
+    if(glMajorVersion<2){
+        throw std::runtime_error("[Main] version de OpenGL incompatible, version minima 2.0");
+    }
 }
 
 std::shared_ptr<Main>& Main::getHinstance(){

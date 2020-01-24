@@ -551,7 +551,7 @@
 	<string>
 	<vector>
 
-1577547151 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/event_class.cpp
+1577558274 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/event_class.cpp
 	<iostream>
 	"window_class.h"
 	"event_class.h"
@@ -576,7 +576,7 @@
 	<GL/glx.h>
 	<memory>
 
-1577541891 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/main.cpp
+1579887964 source:/home/david-linux-ssd/Programacion/Audio-DFT/src/main.cpp
 	<X11/Xlib.h>
 	<unistd.h>
 	<iostream>
