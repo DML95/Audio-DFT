@@ -21,6 +21,8 @@
 *.a
 *.lib
 
-# File binary
-bin/
-obj/
+# Executables
+*.exe
+*.out
+*.app
+*.elf
