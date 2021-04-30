@@ -53,7 +53,8 @@
     }
 
     template <class T> VBOClass<T>* BufferClass<T>::swapAndGetVBO(){
-        while(!this->mutex.try_lock()){
+    	std::lock_guard<std::mutex> lock(this->mutex,std::defer_lock);
+        while(!lock.try_lock()){
             this->semaphore.notify_all();
             std::this_thread::yield();
         }
@@ -64,7 +65,6 @@
         this->buffer=this->vboClass[option]->map(GL_READ_WRITE);
         this->option=option;
         this->swap=false;
-        this->mutex.unlock();
         return vboClass;
     }
 
@@ -72,11 +72,10 @@
         T *buffer;
         bool swap;
         do{
-            this->mutex.lock();
+        	std::lock_guard<std::mutex> lock(this->mutex);
             buffer=this->buffer;
             swap=this->swap.exchange(true);
             if(swap)semaphore.wait();
-            this->mutex.unlock();
         }while(swap);
         return buffer;
     }
