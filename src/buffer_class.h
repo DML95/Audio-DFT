@@ -53,7 +53,7 @@
     }
 
     template <class T> VBOClass<T>* BufferClass<T>::swapAndGetVBO(){
-    	std::lock_guard<std::mutex> lock(this->mutex,std::defer_lock);
+    	std::unique_lock<std::mutex> lock(this->mutex,std::defer_lock);
         while(!lock.try_lock()){
             this->semaphore.notify_all();
             std::this_thread::yield();
