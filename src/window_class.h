@@ -30,11 +30,11 @@
             //asigna la ventana al contexto
             void map();
             //agrega un protocolo WM
-            Atom addWMProtocol(std::string name);
+            Atom addWMProtocol(const std::string &name);
             //establece el tamaño mayor y menor de la ventana
             void setNormalSize(int minWidth,int minHeight,int maxWidth,int maxHeight);
             //establece el titulo de la ventana
-            void setTitle(std::string title);
+            void setTitle(const std::string &title);
             //estable una mascara de eventos
             void setEventMask(int mask);
             //getter y setter

@@ -11,7 +11,7 @@
             GLuint shader;
         public:
             //constructor
-            ShaderClass(const std::shared_ptr<GLClass> &glClass,int type,std::string code);
+            ShaderClass(const std::shared_ptr<GLClass> &glClass,int type,const std::string &code);
             //destructor
             ~ShaderClass();
             //obtiene los logs

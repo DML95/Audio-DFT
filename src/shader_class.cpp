@@ -5,7 +5,7 @@
 
 #include "shader_class.h"
 
-ShaderClass::ShaderClass(const std::shared_ptr<GLClass> &glClass,int type,std::string code):
+ShaderClass::ShaderClass(const std::shared_ptr<GLClass> &glClass,int type,const std::string &code):
         glClass(glClass){
     std::clog<<"[ShaderClass] Loadding\n\ttype = "<<type<<"\n\tcode:\n"<<code<<std::endl;
     GLint isCompiled;

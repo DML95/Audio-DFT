@@ -41,14 +41,14 @@ GLuint ProgramClass::get(){
     return this->program;
 }
 
-void ProgramClass::setUniformVar(std::string name,float value){
+void ProgramClass::setUniformVar(const std::string &name,float value){
     std::clog<<"[ProgramClass] setUniformVar '"<<name<<"' = "<<value<<std::endl;
     GLint loc=glGetUniformLocation(this->program,name.c_str());
     if(loc==-1)throw std::runtime_error("[glGetUniformLocation]");
     glUniform1f(loc,value);
 }
 
-GLint ProgramClass::getAttribLocation(std::string name){
+GLint ProgramClass::getAttribLocation(const std::string &name){
     GLint loc=glGetAttribLocation(this->program,name.c_str());
     std::clog<<"[ProgramClass] getAttribLocation '"<<name<<"' = "<<loc<<std::endl;
     if(loc==-1)throw std::runtime_error("[glGetAttribLocation]");

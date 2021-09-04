@@ -19,9 +19,9 @@
             //retira el programa
             static void notUse();
             //establece una cariable uforme de tipo float
-            void setUniformVar(std::string name,float value);
+            void setUniformVar(const std::string &name,float value);
             //optiene el identigicador de un atrubuto
-            GLint getAttribLocation(std::string name);
+            GLint getAttribLocation(const std::string &name);
             //obtiene los logs
             std::string getLog();
             //getter setter

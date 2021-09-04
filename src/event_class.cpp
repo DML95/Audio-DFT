@@ -57,8 +57,7 @@ EventClass::~EventClass(){
 
 bool EventClass::next(EventClass::eventsStruct &eventsStruct){
     bool run;
-    do{
-        this->semaphore.wait();
+    for(;;){
         {
         	std::lock_guard<std::mutex> lock(this->mutex);
 			eventsStruct.events=this->events.exchange(0);
@@ -71,7 +70,9 @@ bool EventClass::next(EventClass::eventsStruct &eventsStruct){
 				eventsStruct.maxValue=this->maxValue;
 			}
         }
-    }while(run&&(!eventsStruct.events));
+        if(run||eventsStruct.events)break;
+        this->semaphore.wait();
+    }
     return run;
 }
 

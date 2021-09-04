@@ -46,7 +46,7 @@ void WindowClass::map(){
     XMapWindow(this->displayClass->get(),this->window);
 }
 
-Atom WindowClass::addWMProtocol(std::string name){
+Atom WindowClass::addWMProtocol(const std::string &name){
     std::clog<<"[WindowClass] Add WMProtocol \""<<name<<"\""<<std::endl;
     Atom atom=XInternAtom(this->displayClass->get(),
             name.c_str(),false);
@@ -58,7 +58,7 @@ Atom WindowClass::addWMProtocol(std::string name){
     return atom;
 }
 
-void WindowClass::setTitle(std::string title){
+void WindowClass::setTitle(const std::string &title){
     std::clog<<"[WindowClass] Set title \""<<title<<"\""<<std::endl;
     XStoreName(
             this->displayClass->get(),
