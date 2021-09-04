@@ -1,7 +1,7 @@
 ## VARIABLES
 
 CXX=g++
-CXXFLAGS=-O3 -std=c++17 -Wall
+CXXFLAGS=-O3 -std=c++17 -Wall -pthread
 LDFLAGS=-static-libstdc++ -static-libgcc
 
 DIRSRC = src
