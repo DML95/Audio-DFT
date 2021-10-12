@@ -79,5 +79,5 @@ $(DIROBJ)/%.o: $(DIRSRC)/%.cpp
 	$(CXX) -o $@ -c $< $(CXXFLAGS) -I$(DIRSRC)
 
 #limpiamos los archivos antiguos
-clean: $(DIROBJ) $(DIRDEP) $(FILE_BIN)
-	$(call RM_OS,$^)
+clean:
+	$(call RM_OS,$(DIROBJ) $(DIRDEP) $(FILE_BIN))
